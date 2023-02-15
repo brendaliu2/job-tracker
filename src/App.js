@@ -1,23 +1,39 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import TrackerApi from './api.js';
+
+// interface Company {
+//   handle:string,
+//   career_link:string,
+//   last_visited:string
+// }
 
 function App() {
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(function getAllCompanies() {
+      console.log("inside JoblyApp useEffect");
+
+      async function getCompanies() {
+        const results = await TrackerApi.getCompanies();
+        console.log(results)
+        setCompanies(results);
+      }
+      getCompanies()
+
+    }, []);
+
+  console.log('outside use effects',companies);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Tracker</h1>
+      <ul>
+  {companies.map((company) => (
+    <li key={company.handle}>{company.handle}, <a href={company.career_page}>{company.career_page}</a></li>
+  ))}
+</ul>
+
+
     </div>
   );
 }
